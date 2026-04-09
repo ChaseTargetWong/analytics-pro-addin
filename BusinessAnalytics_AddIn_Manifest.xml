@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ╔══════════════════════════════════════════════════════════════════════════╗
+  ║         BUSINESS ANALYTICS PRO — EXCEL OFFICE ADD-IN MANIFEST          ║
+  ║                  Office Add-in Manifest v1.1 (XML)                     ║
+  ║                                                                        ║
+  ║  How to sideload for testing:                                          ║
+  ║    1. Excel → Insert → Add-ins → Manage My Add-ins → Upload My Add-in  ║
+  ║    2. Select this manifest file                                        ║
+  ║    3. The ribbon tab "Analytics Pro" will appear                       ║
+  ╚══════════════════════════════════════════════════════════════════════════╝
+-->
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+  xsi:type="TaskPaneApp">
+
+  <!-- ═══════════════════════════════════════════════
+       IDENTITY
+  ═══════════════════════════════════════════════ -->
+  <Id>a1b2c3d4-e5f6-7890-abcd-ef1234567890</Id>
+  <Version>2.1.0</Version>
+  <ProviderName>Analytics Pro Inc.</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+
+  <!-- ═══════════════════════════════════════════════
+       DISPLAY INFO
+  ═══════════════════════════════════════════════ -->
+  <DisplayName DefaultValue="Business Analytics Pro"/>
+  <Description DefaultValue="A powerful Excel add-in for business analytics: dashboards, KPI tracking, forecasting, and automated reporting — all from your ribbon."/>
+
+  <IconUrl DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/analytics-pro-32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/analytics-pro-64.png"/>
+  <SupportUrl DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin"/>
+
+  <!-- ═══════════════════════════════════════════════
+       APP DOMAINS (allowed origins for iframes)
+  ═══════════════════════════════════════════════ -->
+  <AppDomains>
+    <AppDomain>https://YOUR-USERNAME.github.io</AppDomain>
+  </AppDomains>
+
+  <!-- ═══════════════════════════════════════════════
+       HOSTS — targets Excel Desktop + Online
+  ═══════════════════════════════════════════════ -->
+  <Hosts>
+    <Host Name="Workbook"/>
+  </Hosts>
+
+  <!-- ═══════════════════════════════════════════════
+       DEFAULT SETTINGS (legacy fallback)
+  ═══════════════════════════════════════════════ -->
+  <DefaultSettings>
+    <SourceLocation DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/dashboard.html"/>
+  </DefaultSettings>
+
+  <!-- ═══════════════════════════════════════════════
+       PERMISSIONS
+  ═══════════════════════════════════════════════ -->
+  <Permissions>ReadWriteDocument</Permissions>
+
+  <!-- ═══════════════════════════════════════════════
+       VERSION OVERRIDES — Modern ribbon UI
+  ═══════════════════════════════════════════════ -->
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
+
+    <!-- Supported hosts with API requirement -->
+    <Hosts>
+      <Host xsi:type="Workbook">
+        <Requirements>
+          <Sets DefaultMinVersion="1.1">
+            <Set Name="ExcelApi" MinVersion="1.7"/>
+          </Sets>
+        </Requirements>
+
+        <!-- ─────────────────────────────────────────
+             ALL FORM FACTORS
+        ───────────────────────────────────────── -->
+        <AllFormFactors>
+          <!-- Custom Functions metadata (for =ANALYTICS.*() formulas) -->
+          <ExtensionPoint xsi:type="CustomFunctions">
+            <Script>
+              <SourceLocation resid="Functions.Script.Url"/>
+            </Script>
+            <Page>
+              <SourceLocation resid="Functions.Page.Url"/>
+            </Page>
+            <Metadata>
+              <SourceLocation resid="Functions.Metadata.Url"/>
+            </Metadata>
+            <Namespace resid="Functions.Namespace"/>
+          </ExtensionPoint>
+        </AllFormFactors>
+
+        <!-- ─────────────────────────────────────────
+             DESKTOP FORM FACTOR — Ribbon + Task Panes
+        ───────────────────────────────────────── -->
+        <DesktopFormFactor>
+
+          <!-- GetStarted callout shown on first install -->
+          <GetStarted>
+            <Title resid="GetStarted.Title"/>
+            <Description resid="GetStarted.Description"/>
+            <LearnMoreUrl resid="LearnMore.Url"/>
+          </GetStarted>
+
+          <!-- ───── FUNCTION FILE (runs ribbon button logic) ───── -->
+          <FunctionFile resid="Commands.Url"/>
+
+          <!-- ═══════════════════════════════════════
+               EXTENSION POINT — Custom Ribbon Tab
+          ═══════════════════════════════════════ -->
+          <ExtensionPoint xsi:type="PrimaryCommandSurface">
+            <CustomTab id="AnalyticsPro.Tab">
+              <Label resid="Tab.Label"/>
+              <Icon>
+                <bt:Image size="16" resid="Icon.16x16"/>
+                <bt:Image size="32" resid="Icon.32x32"/>
+                <bt:Image size="80" resid="Icon.80x80"/>
+              </Icon>
+
+              <!-- ── GROUP 1: Dashboard ────────────────────────── -->
+              <Group id="AnalyticsPro.Group.Dashboard">
+                <Label resid="Group.Dashboard.Label"/>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.16x16"/>
+                  <bt:Image size="32" resid="Icon.32x32"/>
+                  <bt:Image size="80" resid="Icon.80x80"/>
+                </Icon>
+
+                <!-- Open Dashboard Pane -->
+                <Control xsi:type="Button" id="Btn.OpenDashboard">
+                  <Label resid="Btn.Dashboard.Label"/>
+                  <Supertip>
+                    <Title resid="Btn.Dashboard.Label"/>
+                    <Description resid="Btn.Dashboard.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.Dashboard.16"/>
+                    <bt:Image size="32" resid="Icon.Dashboard.32"/>
+                    <bt:Image size="80" resid="Icon.Dashboard.80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>DashboardPane</TaskpaneId>
+                    <SourceLocation resid="Dashboard.Url"/>
+                    <Title resid="Btn.Dashboard.Label"/>
+                    <SupportsPinning>true</SupportsPinning>
+                  </Action>
+                </Control>
+
+                <!-- Build KPI Cards (execute function directly) -->
+                <Control xsi:type="Button" id="Btn.BuildKPIs">
+                  <Label resid="Btn.BuildKPIs.Label"/>
+                  <Supertip>
+                    <Title resid="Btn.BuildKPIs.Label"/>
+                    <Description resid="Btn.BuildKPIs.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.KPI.16"/>
+                    <bt:Image size="32" resid="Icon.KPI.32"/>
+                    <bt:Image size="80" resid="Icon.KPI.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>buildKPICards</FunctionName>
+                  </Action>
+                </Control>
+              </Group>
+
+              <!-- ── GROUP 2: Data Tools ───────────────────────── -->
+              <Group id="AnalyticsPro.Group.Data">
+                <Label resid="Group.Data.Label"/>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.16x16"/>
+                  <bt:Image size="32" resid="Icon.32x32"/>
+                  <bt:Image size="80" resid="Icon.80x80"/>
+                </Icon>
+
+                <!-- Import Data pane -->
+                <Control xsi:type="Button" id="Btn.ImportData">
+                  <Label resid="Btn.Import.Label"/>
+                  <Supertip>
+                    <Title resid="Btn.Import.Label"/>
+                    <Description resid="Btn.Import.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.Import.16"/>
+                    <bt:Image size="32" resid="Icon.Import.32"/>
+                    <bt:Image size="80" resid="Icon.Import.80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ImportPane</TaskpaneId>
+                    <SourceLocation resid="Import.Url"/>
+                    <Title resid="Btn.Import.Label"/>
+                  </Action>
+                </Control>
+
+                <!-- Clean & Validate (execute function) -->
+                <Control xsi:type="Button" id="Btn.CleanData">
+                  <Label resid="Btn.Clean.Label"/>
+                  <Supertip>
+                    <Title resid="Btn.Clean.Label"/>
+                    <Description resid="Btn.Clean.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.Clean.16"/>
+                    <bt:Image size="32" resid="Icon.Clean.32"/>
+                    <bt:Image size="80" resid="Icon.Clean.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>cleanAndValidate</FunctionName>
+                  </Action>
+                </Control>
+
+                <!-- Dropdown menu: Chart Types -->
+                <Control xsi:type="Menu" id="Menu.Charts">
+                  <Label resid="Menu.Charts.Label"/>
+                  <Supertip>
+                    <Title resid="Menu.Charts.Label"/>
+                    <Description resid="Menu.Charts.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.Chart.16"/>
+                    <bt:Image size="32" resid="Icon.Chart.32"/>
+                    <bt:Image size="80" resid="Icon.Chart.80"/>
+                  </Icon>
+                  <Items>
+                    <Item id="Menu.Charts.Bar">
+                      <Label resid="Menu.Charts.Bar.Label"/>
+                      <Supertip>
+                        <Title resid="Menu.Charts.Bar.Label"/>
+                        <Description resid="Menu.Charts.Bar.Tooltip"/>
+                      </Supertip>
+                      <Icon>
+                        <bt:Image size="16" resid="Icon.Chart.16"/>
+                        <bt:Image size="32" resid="Icon.Chart.32"/>
+                        <bt:Image size="80" resid="Icon.Chart.80"/>
+                      </Icon>
+                      <Action xsi:type="ExecuteFunction">
+                        <FunctionName>insertBarChart</FunctionName>
+                      </Action>
+                    </Item>
+                    <Item id="Menu.Charts.Line">
+                      <Label resid="Menu.Charts.Line.Label"/>
+                      <Supertip>
+                        <Title resid="Menu.Charts.Line.Label"/>
+                        <Description resid="Menu.Charts.Line.Tooltip"/>
+                      </Supertip>
+                      <Icon>
+                        <bt:Image size="16" resid="Icon.Chart.16"/>
+                        <bt:Image size="32" resid="Icon.Chart.32"/>
+                        <bt:Image size="80" resid="Icon.Chart.80"/>
+                      </Icon>
+                      <Action xsi:type="ExecuteFunction">
+                        <FunctionName>insertLineChart</FunctionName>
+                      </Action>
+                    </Item>
+                    <Item id="Menu.Charts.Waterfall">
+                      <Label resid="Menu.Charts.Waterfall.Label"/>
+                      <Supertip>
+                        <Title resid="Menu.Charts.Waterfall.Label"/>
+                        <Description resid="Menu.Charts.Waterfall.Tooltip"/>
+                      </Supertip>
+                      <Icon>
+                        <bt:Image size="16" resid="Icon.Chart.16"/>
+                        <bt:Image size="32" resid="Icon.Chart.32"/>
+                        <bt:Image size="80" resid="Icon.Chart.80"/>
+                      </Icon>
+                      <Action xsi:type="ExecuteFunction">
+                        <FunctionName>insertWaterfallChart</FunctionName>
+                      </Action>
+                    </Item>
+                  </Items>
+                </Control>
+              </Group>
+
+              <!-- ── GROUP 3: Forecasting ──────────────────────── -->
+              <Group id="AnalyticsPro.Group.Forecast">
+                <Label resid="Group.Forecast.Label"/>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.16x16"/>
+                  <bt:Image size="32" resid="Icon.32x32"/>
+                  <bt:Image size="80" resid="Icon.80x80"/>
+                </Icon>
+
+                <Control xsi:type="Button" id="Btn.Forecast">
+                  <Label resid="Btn.Forecast.Label"/>
+                  <Supertip>
+                    <Title resid="Btn.Forecast.Label"/>
+                    <Description resid="Btn.Forecast.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.Forecast.16"/>
+                    <bt:Image size="32" resid="Icon.Forecast.32"/>
+                    <bt:Image size="80" resid="Icon.Forecast.80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ForecastPane</TaskpaneId>
+                    <SourceLocation resid="Forecast.Url"/>
+                    <Title resid="Btn.Forecast.Label"/>
+                    <SupportsPinning>true</SupportsPinning>
+                  </Action>
+                </Control>
+
+                <Control xsi:type="Button" id="Btn.Scenario">
+                  <Label resid="Btn.Scenario.Label"/>
+                  <Supertip>
+                    <Title resid="Btn.Scenario.Label"/>
+                    <Description resid="Btn.Scenario.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.Scenario.16"/>
+                    <bt:Image size="32" resid="Icon.Scenario.32"/>
+                    <bt:Image size="80" resid="Icon.Scenario.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>runScenarioAnalysis</FunctionName>
+                  </Action>
+                </Control>
+              </Group>
+
+              <!-- ── GROUP 4: Reports ──────────────────────────── -->
+              <Group id="AnalyticsPro.Group.Reports">
+                <Label resid="Group.Reports.Label"/>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.16x16"/>
+                  <bt:Image size="32" resid="Icon.32x32"/>
+                  <bt:Image size="80" resid="Icon.80x80"/>
+                </Icon>
+
+                <Control xsi:type="Button" id="Btn.ExportPDF">
+                  <Label resid="Btn.ExportPDF.Label"/>
+                  <Supertip>
+                    <Title resid="Btn.ExportPDF.Label"/>
+                    <Description resid="Btn.ExportPDF.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.Export.16"/>
+                    <bt:Image size="32" resid="Icon.Export.32"/>
+                    <bt:Image size="80" resid="Icon.Export.80"/>
+                  </Icon>
+                  <Action xsi:type="ExecuteFunction">
+                    <FunctionName>exportDashboardPDF</FunctionName>
+                  </Action>
+                </Control>
+
+                <Control xsi:type="Button" id="Btn.EmailReport">
+                  <Label resid="Btn.Email.Label"/>
+                  <Supertip>
+                    <Title resid="Btn.Email.Label"/>
+                    <Description resid="Btn.Email.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.Email.16"/>
+                    <bt:Image size="32" resid="Icon.Email.32"/>
+                    <bt:Image size="80" resid="Icon.Email.80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>EmailPane</TaskpaneId>
+                    <SourceLocation resid="Email.Url"/>
+                    <Title resid="Btn.Email.Label"/>
+                  </Action>
+                </Control>
+              </Group>
+
+            </CustomTab>
+          </ExtensionPoint>
+
+          <!-- ═══════════════════════════════════════
+               EXTENSION POINT — Context Menu
+               (right-click on a cell range)
+          ═══════════════════════════════════════ -->
+          <ExtensionPoint xsi:type="ContextMenu">
+            <OfficeMenu id="ContextMenuCell">
+              <Control xsi:type="Button" id="CtxBtn.QuickChart">
+                <Label resid="Btn.QuickChart.Label"/>
+                <Supertip>
+                  <Title resid="Btn.QuickChart.Label"/>
+                  <Description resid="Btn.QuickChart.Tooltip"/>
+                </Supertip>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.Chart.16"/>
+                  <bt:Image size="32" resid="Icon.Chart.32"/>
+                  <bt:Image size="80" resid="Icon.Chart.80"/>
+                </Icon>
+                <Action xsi:type="ExecuteFunction">
+                  <FunctionName>quickChartFromSelection</FunctionName>
+                </Action>
+              </Control>
+              <Control xsi:type="Button" id="CtxBtn.FormatKPI">
+                <Label resid="Btn.FormatKPI.Label"/>
+                <Supertip>
+                  <Title resid="Btn.FormatKPI.Label"/>
+                  <Description resid="Btn.FormatKPI.Tooltip"/>
+                </Supertip>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.KPI.16"/>
+                  <bt:Image size="32" resid="Icon.KPI.32"/>
+                  <bt:Image size="80" resid="Icon.KPI.80"/>
+                </Icon>
+                <Action xsi:type="ExecuteFunction">
+                  <FunctionName>formatAsKPICard</FunctionName>
+                </Action>
+              </Control>
+            </OfficeMenu>
+          </ExtensionPoint>
+
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+
+    <!-- ═══════════════════════════════════════════════
+         REQUIREMENTS
+    ═══════════════════════════════════════════════ -->
+    <Requirements>
+      <Sets DefaultMinVersion="1.1">
+        <Set Name="ExcelApi" MinVersion="1.7"/>
+        <Set Name="DialogApi" MinVersion="1.1"/>
+      </Sets>
+    </Requirements>
+
+    <!-- ═══════════════════════════════════════════════
+         RESOURCES — all resid references resolved here
+    ═══════════════════════════════════════════════ -->
+    <Resources>
+
+      <!-- ── URLs ─────────────────────────────────── -->
+      <bt:Urls>
+        <bt:Url id="Commands.Url"         DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/commands.html"/>
+        <bt:Url id="Dashboard.Url"        DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/dashboard.html"/>
+        <bt:Url id="Import.Url"           DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/import.html"/>
+        <bt:Url id="Forecast.Url"         DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/forecast.html"/>
+        <bt:Url id="Email.Url"            DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/email.html"/>
+        <bt:Url id="LearnMore.Url"        DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin"/>
+        <bt:Url id="Functions.Script.Url" DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/functions.js"/>
+        <bt:Url id="Functions.Page.Url"   DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/functions.html"/>
+        <bt:Url id="Functions.Metadata.Url" DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/functions-metadata.json"/>
+      </bt:Urls>
+
+      <!-- ── Short Strings ─────────────────────────── -->
+      <bt:ShortStrings>
+        <bt:String id="Tab.Label"                    DefaultValue="Analytics Pro"/>
+        <bt:String id="GetStarted.Title"             DefaultValue="Welcome to Business Analytics Pro!"/>
+        <bt:String id="Functions.Namespace"          DefaultValue="ANALYTICS"/>
+
+        <!-- Groups -->
+        <bt:String id="Group.Dashboard.Label"        DefaultValue="Dashboard"/>
+        <bt:String id="Group.Data.Label"             DefaultValue="Data Tools"/>
+        <bt:String id="Group.Forecast.Label"         DefaultValue="Forecasting"/>
+        <bt:String id="Group.Reports.Label"          DefaultValue="Reports"/>
+
+        <!-- Buttons -->
+        <bt:String id="Btn.Dashboard.Label"          DefaultValue="Open Dashboard"/>
+        <bt:String id="Btn.BuildKPIs.Label"          DefaultValue="Build KPI Cards"/>
+        <bt:String id="Btn.Import.Label"             DefaultValue="Import Data"/>
+        <bt:String id="Btn.Clean.Label"              DefaultValue="Clean &amp; Validate"/>
+        <bt:String id="Menu.Charts.Label"            DefaultValue="Insert Chart"/>
+        <bt:String id="Menu.Charts.Bar.Label"        DefaultValue="Bar / Column Chart"/>
+        <bt:String id="Menu.Charts.Line.Label"       DefaultValue="Line / Trend Chart"/>
+        <bt:String id="Menu.Charts.Waterfall.Label"  DefaultValue="Waterfall Chart"/>
+        <bt:String id="Btn.Forecast.Label"           DefaultValue="Run Forecast"/>
+        <bt:String id="Btn.Scenario.Label"           DefaultValue="Scenario Analysis"/>
+        <bt:String id="Btn.ExportPDF.Label"          DefaultValue="Export to PDF"/>
+        <bt:String id="Btn.Email.Label"              DefaultValue="Email Report"/>
+        <bt:String id="Btn.QuickChart.Label"         DefaultValue="Quick Chart (selection)"/>
+        <bt:String id="Btn.FormatKPI.Label"          DefaultValue="Format as KPI Card"/>
+      </bt:ShortStrings>
+
+      <!-- ── Long Strings (tooltips / descriptions) ── -->
+      <bt:LongStrings>
+        <bt:String id="GetStarted.Description"       DefaultValue="Open the Dashboard pane or use the ribbon buttons to build KPI cards, import data, run forecasts, and export professional reports — all without leaving Excel."/>
+        <bt:String id="Btn.Dashboard.Tooltip"        DefaultValue="Opens the Analytics Pro task pane with live KPI cards, charts, and a monthly trend view powered by your workbook data."/>
+        <bt:String id="Btn.BuildKPIs.Tooltip"        DefaultValue="Automatically formats the selected range as branded KPI cards with color-coded trend indicators."/>
+        <bt:String id="Btn.Import.Tooltip"           DefaultValue="Import data from CSV, JSON, SQL, or a REST API endpoint directly into the active worksheet."/>
+        <bt:String id="Btn.Clean.Tooltip"            DefaultValue="Scans the selected range for blank cells, duplicates, type mismatches, and formula errors — highlights issues and optionally auto-fixes them."/>
+        <bt:String id="Menu.Charts.Tooltip"          DefaultValue="Insert a pre-styled analytics chart based on the current selection."/>
+        <bt:String id="Menu.Charts.Bar.Tooltip"      DefaultValue="Insert a branded bar/column chart for the selected data range."/>
+        <bt:String id="Menu.Charts.Line.Tooltip"     DefaultValue="Insert a trend line chart with a 3-period moving average overlay."/>
+        <bt:String id="Menu.Charts.Waterfall.Tooltip" DefaultValue="Insert a waterfall (bridge) chart to visualise incremental changes."/>
+        <bt:String id="Btn.Forecast.Tooltip"         DefaultValue="Opens the Forecasting pane — choose between linear regression, exponential smoothing, or ARIMA and project up to 24 periods ahead."/>
+        <bt:String id="Btn.Scenario.Tooltip"         DefaultValue="Runs best-case / base-case / worst-case scenario analysis on the selected model inputs and writes results to a new sheet."/>
+        <bt:String id="Btn.ExportPDF.Tooltip"        DefaultValue="Exports the Dashboard sheet to a formatted PDF report and saves it to your Downloads folder."/>
+        <bt:String id="Btn.Email.Tooltip"            DefaultValue="Opens the Email Report pane to send a PDF snapshot of the dashboard directly from Excel via Outlook or SMTP."/>
+        <bt:String id="Btn.QuickChart.Tooltip"       DefaultValue="Instantly creates the most appropriate chart type for the selected cells and places it beside the data."/>
+        <bt:String id="Btn.FormatKPI.Tooltip"        DefaultValue="Reformats the selected cell(s) using the Analytics Pro KPI card style — dark header, large metric, and colour-coded trend badge."/>
+      </bt:LongStrings>
+
+      <!-- ── Icons (replace URLs with your actual hosted assets) ── -->
+      <bt:Images>
+        <!-- Base icon -->
+        <bt:Image id="Icon.16x16"          DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/base-16.png"/>
+        <bt:Image id="Icon.32x32"          DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/base-32.png"/>
+        <bt:Image id="Icon.80x80"          DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/base-80.png"/>
+        <!-- Dashboard -->
+        <bt:Image id="Icon.Dashboard.16"   DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/dashboard-16.png"/>
+        <bt:Image id="Icon.Dashboard.32"   DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/dashboard-32.png"/>
+        <bt:Image id="Icon.Dashboard.80"   DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/dashboard-80.png"/>
+        <!-- KPI -->
+        <bt:Image id="Icon.KPI.16"         DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/kpi-16.png"/>
+        <bt:Image id="Icon.KPI.32"         DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/kpi-32.png"/>
+        <bt:Image id="Icon.KPI.80"         DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/kpi-80.png"/>
+        <!-- Import -->
+        <bt:Image id="Icon.Import.16"      DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/import-16.png"/>
+        <bt:Image id="Icon.Import.32"      DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/import-32.png"/>
+        <bt:Image id="Icon.Import.80"      DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/import-80.png"/>
+        <!-- Clean -->
+        <bt:Image id="Icon.Clean.16"       DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/clean-16.png"/>
+        <bt:Image id="Icon.Clean.32"       DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/clean-32.png"/>
+        <bt:Image id="Icon.Clean.80"       DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/clean-80.png"/>
+        <!-- Chart -->
+        <bt:Image id="Icon.Chart.16"       DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/chart-16.png"/>
+        <bt:Image id="Icon.Chart.32"       DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/chart-32.png"/>
+        <bt:Image id="Icon.Chart.80"       DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/chart-80.png"/>
+        <!-- Forecast -->
+        <bt:Image id="Icon.Forecast.16"    DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/forecast-16.png"/>
+        <bt:Image id="Icon.Forecast.32"    DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/forecast-32.png"/>
+        <bt:Image id="Icon.Forecast.80"    DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/forecast-80.png"/>
+        <!-- Scenario -->
+        <bt:Image id="Icon.Scenario.16"    DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/scenario-16.png"/>
+        <bt:Image id="Icon.Scenario.32"    DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/scenario-32.png"/>
+        <bt:Image id="Icon.Scenario.80"    DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/scenario-80.png"/>
+        <!-- Export -->
+        <bt:Image id="Icon.Export.16"      DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/export-16.png"/>
+        <bt:Image id="Icon.Export.32"      DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/export-32.png"/>
+        <bt:Image id="Icon.Export.80"      DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/export-80.png"/>
+        <!-- Email -->
+        <bt:Image id="Icon.Email.16"       DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/email-16.png"/>
+        <bt:Image id="Icon.Email.32"       DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/email-32.png"/>
+        <bt:Image id="Icon.Email.80"       DefaultValue="https://YOUR-USERNAME.github.io/analytics-pro-addin/icons/email-80.png"/>
+      </bt:Images>
+
+    </Resources>
+  </VersionOverrides>
+
+</OfficeApp>
