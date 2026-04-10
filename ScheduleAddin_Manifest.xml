@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ╔══════════════════════════════════════════════════════════════════════════╗
+  ║           SHIFT SCHEDULER AI — EXCEL OFFICE ADD-IN MANIFEST            ║
+  ║                  Office Add-in Manifest v1.1 (XML)                     ║
+  ║                                                                        ║
+  ║  SETUP:                                                                ║
+  ║    1. Replace YOUR-USERNAME with your GitHub username (all caps search) ║
+  ║    2. Upload schedule_addin.html to GitHub repo as schedule_addin.html  ║
+  ║    3. Enable GitHub Pages on your repo (Settings → Pages → main/root)  ║
+  ║    4. In Excel: Insert → Add-ins → Upload My Add-in → select this file ║
+  ╚══════════════════════════════════════════════════════════════════════════╝
+-->
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+  xsi:type="TaskPaneApp">
+
+  <!-- ═══════════════════════════════════════
+       IDENTITY
+  ═══════════════════════════════════════ -->
+  <Id>b2c3d4e5-f6a7-8901-bcde-f23456789012</Id>
+  <Version>1.0.0</Version>
+  <ProviderName>chasetargetwong</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+
+  <!-- ═══════════════════════════════════════
+       DISPLAY
+  ═══════════════════════════════════════ -->
+  <DisplayName DefaultValue="Shift Scheduler AI"/>
+  <Description DefaultValue="AI-powered monthly work schedule generator for retail and restaurant teams. Powered by Claude."/>
+
+  <IconUrl DefaultValue="https://chasetargetwong.github.io/analytics-pro-addin/icons/scheduler-32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://chasetargetwong.github.io/analytics-pro-addin/icons/scheduler-64.png"/>
+  <SupportUrl DefaultValue="https://chasetargetwong.github.io/analytics-pro-addin"/>
+
+  <!-- ═══════════════════════════════════════
+       APP DOMAINS
+       Must include every origin the pane loads from.
+       github.io + anthropic.com (for API calls).
+  ═══════════════════════════════════════ -->
+  <AppDomains>
+    <AppDomain>https://chasetargetwong.github.io</AppDomain>
+    <AppDomain>https://api.anthropic.com</AppDomain>
+  </AppDomains>
+
+  <!-- ═══════════════════════════════════════
+       HOSTS
+  ═══════════════════════════════════════ -->
+  <Hosts>
+    <Host Name="Workbook"/>
+  </Hosts>
+
+  <!-- ═══════════════════════════════════════
+       DEFAULT SETTINGS (legacy fallback)
+  ═══════════════════════════════════════ -->
+  <DefaultSettings>
+    <SourceLocation DefaultValue="https://chasetargetwong.github.io/analytics-pro-addin/schedule_addin.html"/>
+  </DefaultSettings>
+
+  <!-- ═══════════════════════════════════════
+       PERMISSIONS
+       ReadWriteDocument needed to write schedule
+       data to Excel sheets in future versions.
+  ═══════════════════════════════════════ -->
+  <Permissions>ReadWriteDocument</Permissions>
+
+  <!-- ═══════════════════════════════════════
+       VERSION OVERRIDES — Modern ribbon UI
+  ═══════════════════════════════════════ -->
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
+
+    <Hosts>
+      <Host xsi:type="Workbook">
+
+        <Requirements>
+          <Sets DefaultMinVersion="1.1">
+            <Set Name="ExcelApi" MinVersion="1.1"/>
+          </Sets>
+        </Requirements>
+
+        <DesktopFormFactor>
+
+          <!-- GetStarted callout shown on first install -->
+          <GetStarted>
+            <Title resid="GetStarted.Title"/>
+            <Description resid="GetStarted.Description"/>
+            <LearnMoreUrl resid="LearnMore.Url"/>
+          </GetStarted>
+
+          <FunctionFile resid="Commands.Url"/>
+
+          <!-- ══════════════════════════════
+               RIBBON TAB
+          ══════════════════════════════ -->
+          <ExtensionPoint xsi:type="PrimaryCommandSurface">
+            <CustomTab id="ShiftScheduler.Tab">
+              <Label resid="Tab.Label"/>
+              <Icon>
+                <bt:Image size="16" resid="Icon.16x16"/>
+                <bt:Image size="32" resid="Icon.32x32"/>
+                <bt:Image size="80" resid="Icon.80x80"/>
+              </Icon>
+
+              <!-- GROUP: Scheduler -->
+              <Group id="ShiftScheduler.Group.Main">
+                <Label resid="Group.Main.Label"/>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.16x16"/>
+                  <bt:Image size="32" resid="Icon.32x32"/>
+                  <bt:Image size="80" resid="Icon.80x80"/>
+                </Icon>
+
+                <!-- Open Scheduler Pane -->
+                <Control xsi:type="Button" id="Btn.OpenScheduler">
+                  <Label resid="Btn.Scheduler.Label"/>
+                  <Supertip>
+                    <Title resid="Btn.Scheduler.Label"/>
+                    <Description resid="Btn.Scheduler.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16"/>
+                    <bt:Image size="32" resid="Icon.32x32"/>
+                    <bt:Image size="80" resid="Icon.80x80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>SchedulerPane</TaskpaneId>
+                    <SourceLocation resid="Scheduler.Url"/>
+                    <Title resid="Btn.Scheduler.Label"/>
+                    <SupportsPinning>true</SupportsPinning>
+                  </Action>
+                </Control>
+
+              </Group>
+            </CustomTab>
+          </ExtensionPoint>
+
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+
+    <Requirements>
+      <Sets DefaultMinVersion="1.1">
+        <Set Name="ExcelApi" MinVersion="1.1"/>
+      </Sets>
+    </Requirements>
+
+    <!-- ═══════════════════════════════════════
+         RESOURCES
+    ═══════════════════════════════════════ -->
+    <Resources>
+
+      <bt:Urls>
+        <bt:Url id="Commands.Url"   DefaultValue="https://chasetargetwong.github.io/analytics-pro-addin/commands.html"/>
+        <bt:Url id="Scheduler.Url"  DefaultValue="https://chasetargetwong.github.io/analytics-pro-addin/schedule_addin.html"/>
+        <bt:Url id="LearnMore.Url"  DefaultValue="https://chasetargetwong.github.io/analytics-pro-addin"/>
+      </bt:Urls>
+
+      <bt:ShortStrings>
+        <bt:String id="Tab.Label"              DefaultValue="Shift Scheduler"/>
+        <bt:String id="GetStarted.Title"       DefaultValue="AI-Powered Shift Scheduler"/>
+        <bt:String id="Group.Main.Label"       DefaultValue="Schedule"/>
+        <bt:String id="Btn.Scheduler.Label"    DefaultValue="Open Scheduler"/>
+      </bt:ShortStrings>
+
+      <bt:LongStrings>
+        <bt:String id="GetStarted.Description" DefaultValue="Enter your employees, shift types, and rules — Claude AI will generate a complete monthly schedule for your retail or restaurant team in seconds."/>
+        <bt:String id="Btn.Scheduler.Tooltip"  DefaultValue="Opens the AI Schedule Generator pane. Add your team, set shift rules, and Claude will create a full monthly work schedule tailored to your needs."/>
+      </bt:LongStrings>
+
+      <bt:Images>
+        <bt:Image id="Icon.16x16" DefaultValue="https://chasetargetwong.github.io/analytics-pro-addin/icons/scheduler-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://chasetargetwong.github.io/analytics-pro-addin/icons/scheduler-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://chasetargetwong.github.io/analytics-pro-addin/icons/scheduler-80.png"/>
+      </bt:Images>
+
+    </Resources>
+  </VersionOverrides>
+
+</OfficeApp>
